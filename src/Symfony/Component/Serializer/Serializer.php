@@ -138,6 +138,14 @@ class Serializer implements SerializerInterface, ContextAwareNormalizerInterface
             throw new NotEncodableValueException(sprintf('Deserialization for the format "%s" is not supported.', $format));
         }
 
+        if(is_object($data)) {
+            $reflected = new \ReflectionClass($format);
+            if($reflected->isAbstract()) {
+                throw new RuntimeException('Abstract class cannot be used to deserialize objects');
+            } elseif($reflected->isTrait()) {
+                throw new RuntimeException('Traits cannot be used to deserialize objects');
+            }
+        }
         $data = $this->decode($data, $format, $context);
 
         return $this->denormalize($data, $type, $format, $context);
@@ -170,7 +178,7 @@ class Serializer implements SerializerInterface, ContextAwareNormalizerInterface
             if (!$this->normalizers) {
                 throw new LogicException('You must register at least one normalizer to be able to normalize objects.');
             }
-
+            
             throw new NotNormalizableValueException(sprintf('Could not normalize object of type "%s", no supporting normalizer found.', get_debug_type($data)));
         }
 
