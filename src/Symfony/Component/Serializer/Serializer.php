@@ -139,11 +139,11 @@ class Serializer implements SerializerInterface, ContextAwareNormalizerInterface
         }
 
         if(is_object($data)) {
-            $reflected = new \ReflectionClass($format);
+            $reflected = new \ReflectionClass($type);
             if($reflected->isAbstract()) {
-                throw new RuntimeException('Abstract class cannot be used to deserialize objects');
+                throw new RuntimeException(sprintf('Abstract class "%s" cannot be used to deserialize objects', $type));
             } elseif($reflected->isTrait()) {
-                throw new RuntimeException('Traits cannot be used to deserialize objects');
+                throw new RuntimeException(sprintf('Trait "%s" cannot be used to deserialize objects', $type));
             }
         }
         $data = $this->decode($data, $format, $context);
