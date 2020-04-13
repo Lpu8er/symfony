@@ -380,14 +380,14 @@ class SerializerTest extends TestCase
         $this->assertEquals(new Foo(new Bar('baz')), $serializer->deserialize($jsonData, Foo::class, 'json'));
     }
     
-    public function testDeserializeObjectNotAbstract()
+    public function testDeserializeObjectIsInstantiable()
     {
         $jsonData = '{"value":"baz"}';
 
         $serializer = new Serializer([new ObjectNormalizer()], ['json' => new JsonEncoder()]);
         
         $this->expectException('Symfony\Component\Serializer\Exception\RuntimeException');
-        $this->expectExceptionMessage('Abstract class "'.__NAMESPACE__.'\Gig" cannot be used to deserialize objects');
+        $this->expectExceptionMessage('Class "'.__NAMESPACE__.'\Gig" is not instantiable and therefore cannot be used to deserialize objects');
         $serializer->deserialize($jsonData, Gig::class, 'json');
     }
 

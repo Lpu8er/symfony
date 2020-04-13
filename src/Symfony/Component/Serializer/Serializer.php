@@ -141,10 +141,8 @@ class Serializer implements SerializerInterface, ContextAwareNormalizerInterface
 
         if(class_exists($type)) {
             $reflected = new \ReflectionClass($type);
-            if($reflected->isAbstract()) {
-                throw new RuntimeException(sprintf('Abstract class "%s" cannot be used to deserialize objects', $type));
-            } elseif($reflected->isTrait()) {
-                throw new RuntimeException(sprintf('Trait "%s" cannot be used to deserialize objects', $type));
+            if(!$reflected->isInstantiable()) {
+                throw new RuntimeException(sprintf('Class "%s" is not instantiable and therefore cannot be used to deserialize objects', $type));
             }
         }
         $data = $this->decode($data, $format, $context);
