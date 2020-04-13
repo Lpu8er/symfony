@@ -379,6 +379,17 @@ class SerializerTest extends TestCase
 
         $this->assertEquals(new Foo(new Bar('baz')), $serializer->deserialize($jsonData, Foo::class, 'json'));
     }
+    
+    public function testDeserializeObjectNotAbstract()
+    {
+        $jsonData = '{"value":"baz"}';
+
+        $serializer = new Serializer([new ObjectNormalizer()], ['json' => new JsonEncoder()]);
+        
+        $this->expectException('Symfony\Component\Serializer\Exception\RuntimeException');
+        $this->expectExceptionMessage('Abstract class "'.__NAMESPACE__.'\Gig" cannot be used to deserialize objects');
+        $serializer->deserialize($jsonData, Gig::class, 'json');
+    }
 
     public function testDeserializeAndSerializeAbstractObjectsWithTheClassMetadataDiscriminatorResolver()
     {
@@ -651,6 +662,15 @@ class Bar
 {
     private $value;
 
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
+}
+
+abstract class Gig {
+    private $value;
+    
     public function __construct($value)
     {
         $this->value = $value;

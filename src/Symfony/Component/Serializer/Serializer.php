@@ -21,6 +21,7 @@ use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Exception\RuntimeException;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
@@ -138,7 +139,7 @@ class Serializer implements SerializerInterface, ContextAwareNormalizerInterface
             throw new NotEncodableValueException(sprintf('Deserialization for the format "%s" is not supported.', $format));
         }
 
-        if(is_object($data)) {
+        if(class_exists($type)) {
             $reflected = new \ReflectionClass($type);
             if($reflected->isAbstract()) {
                 throw new RuntimeException(sprintf('Abstract class "%s" cannot be used to deserialize objects', $type));
