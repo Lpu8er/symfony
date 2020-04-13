@@ -178,7 +178,7 @@ class Serializer implements SerializerInterface, ContextAwareNormalizerInterface
             if (!$this->normalizers) {
                 throw new LogicException('You must register at least one normalizer to be able to normalize objects.');
             }
-            
+
             throw new NotNormalizableValueException(sprintf('Could not normalize object of type "%s", no supporting normalizer found.', get_debug_type($data)));
         }
 
